@@ -58,16 +58,22 @@ This RFC proposes full short circuiting. This means when the evaluation of one e
 Chains are automatically inferred. Using `?->` in the left hand side of an assignment will cause them to be nested. Only the closest chain will terminate. The following examples will try to illustrate.
 
 ```php
-     $foo?->bar = $a?->b()->c()?->d()['e'];
-// 1 -------------------------------------
-// 2              ------------------------
-// If $foo is null chain 1 is aborted (assignment is not executed)
-// If `$a` or `...->c()` are null chain 2 is aborted ($foo->bar is set to null)
+   $foo?->bar = $a?->b()->c();
+// -------------------------- chain 1
+//              ------------- chain 2
+// If $foo is null chain 1 is aborted, `$a?->b()->c()` is not evaluated, the assignment is skipped
+// If $a is null chain 2 is aborted, null is assigned to `$foo->bar`
+// If `->b()` returns null a "Call to a member function c() on null" error is thrown
 
-     ++$foo?->bar;
-// 1 ------------
-// Skips the pre inecrement if ''$foo'' is null
-// Otherwise skips the assignment and evaluates to null
+   $a?->b($c?->d);
+// -------------- chain 1
+//        ------  chain 2
+// If $a is null chain 1 is aborted, `->b()` is not called, `$c?->d` is not evaluated
+// If $c is null chain 2 is aborted, null is passed to `->b()`
+
+   $foo++;
+// ------ chain 1
+// If $foo is null, chain 1 is aborted, ++ is skipped
 ```
 
 ## Backward Incompatible Changes
