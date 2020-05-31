@@ -13,7 +13,7 @@ This RFC proposes a new operator nullsafe operator `?->` with full short-ciruiti
 
 ## Proposal
 
-It is fairly common to only want to call a method or fetch a property on the result of an expression it it is not `null`. This is usually done with if statements / ternary expressions and temporary variables.
+It is fairly common to only want to call a method or fetch a property on the result of an expression if it is not `null`. This is usually done with if statements / ternary expressions and temporary variables.
 
 ```php
 $bar = $foo !== null ? $foo->bar() : null;
