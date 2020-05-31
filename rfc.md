@@ -9,7 +9,7 @@
 
 ## Introduction
 
-This RFC proposes a new operator nullsafe operator `?->` with full short-ciruiting.
+This RFC proposes a new operator nullsafe operator `?->` with full short-circuiting.
 
 ## Proposal
 
@@ -81,6 +81,10 @@ Chains are automatically inferred. Only the closest chain will terminate. The fo
 // ------ chain 1
 // If $foo is null, chain 1 is aborted, ++ is skipped
 ```
+
+## Syntax choice
+
+The syntax has been chosen to indicate the precise place in the code that the short-circuiting occurs.
 
 ## Backward Incompatible Changes
 
