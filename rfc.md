@@ -43,7 +43,7 @@ When the left hand side of the operator evaluates to `null` the execution of the
 
 ### Short circuiting
 
-This RFC proposes full short circuiting. This means when the evaluation of one element in the chain fails the execution of the entire chain is aborted. The following elements are considert part of the chain.
+This RFC proposes full short circuiting. This means when the evaluation of one element in the chain fails the execution of the entire chain is aborted and the entire chain evaluates to `null`. The following elements are considert part of the chain.
 
 * Array offset (`[]`)
 * Property access (`->`)
