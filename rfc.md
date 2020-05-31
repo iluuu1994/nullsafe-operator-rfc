@@ -39,7 +39,7 @@ like this:
 $baz = $foo?->bar()?->baz;
 ```
 
-When the left hand side of the operator evaluates to `null` the execution of the entire chain will stop and evalute to `null`. When it not `null` it will behave exactly like the normal `->` operator.
+When the left hand side of the operator evaluates to `null` the execution of the entire chain will stop and evalute to `null`. When it is not `null` it will behave exactly like the normal `->` operator.
 
 ### Short circuiting
 
