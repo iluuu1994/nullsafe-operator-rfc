@@ -84,8 +84,8 @@ Chains are automatically inferred. Only the closest chain will terminate. The fo
 //              ------- chain 2
 // If $foo is null chain 1 is aborted, `$a->b()` is not evaluated, the assignment is skipped
 
-   $foo++;
-// ------ chain 1
+   $foo?->bar++;
+// ------------ chain 1
 // If $foo is null, chain 1 is aborted, ++ is skipped
 ```
 
