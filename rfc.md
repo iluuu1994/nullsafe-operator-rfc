@@ -84,7 +84,7 @@ Chains are automatically inferred. Only the closest chain will terminate. The fo
 
 ## Backward Incompatible Changes
 
-There are no backward incompatible changes in this RFC.
+There are no known backward incompatible changes in this RFC.
 
 ## Future Scope
 
