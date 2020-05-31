@@ -52,10 +52,16 @@ This RFC proposes full short circuiting. This means when the evaluation of one e
 * Method call (`->`)
 * Nullsafe method call (`?->`)
 * Static method call (`::`)
-* Left hand side of an assignment (`=`, `+=`, `??=`, `= &`, etc.)
+* Assignment (`=`, `+=`, `??=`, `= &`, etc.)
 * Post/pre increment (`++`, `--`)
 
-Chains are automatically inferred. Using `?->` in the left hand side of an assignment will cause them to be nested. Only the closest chain will terminate. The following examples will try to illustrate.
+The following elements will cause new sub-chains.
+
+* Right hand side of an assignment
+* Arguments in a function call
+* The expression in `[]` of an array offset
+
+Chains are automatically inferred. Only the closest chain will terminate. The following examples will try to illustrate.
 
 ```php
    $foo?->bar = $a?->b()->c();
