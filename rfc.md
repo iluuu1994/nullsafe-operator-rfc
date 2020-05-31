@@ -79,11 +79,6 @@ Chains are automatically inferred. Only the closest chain will terminate. The fo
 //       --------  chain 2
 // If $c is null chain 2 is aborted, method d() isn't called, null is passed to `$a->b()`
 
-   $a[$b->d()];
-// --------------- chain 1
-//       --------  chain 2
-// If $c is null chain 2 is aborted, method d() isn't called, null is passed to `$a->b()`
-
    $foo?->bar = $a->b();
 // -------------------- chain 1
 //              ------- chain 2
