@@ -45,7 +45,7 @@ When the left hand side of the operator evaluates to `null` the execution of the
 
 This RFC proposes full short circuiting. This means when the evaluation of one element in the chain fails the execution of the entire chain is aborted and the entire chain evaluates to `null`. The following elements are considert part of the chain.
 
-* Array offset (`[]`)
+* Array access (`[]`)
 * Property access (`->`)
 * Nullsafe property access (`?->`)
 * Static property access (`::`)
@@ -59,7 +59,7 @@ The following elements will cause new sub-chains.
 
 * Right hand side of an assignment
 * Arguments in a function call
-* The expression in `[]` of an array offset
+* The expression in `[]` of an array access
 
 Chains are automatically inferred. Only the closest chain will terminate. The following examples will try to illustrate.
 
@@ -88,7 +88,7 @@ There are no backward incompatible changes in this RFC.
 
 ## Future Scope
 
-Since PHP 7.4 a notice is emitted when accessing an offset on null (`null["foo"]`). Thus the operator `?[]` could also be useful (`$foo?["foo"]`). Unfortunately, this code introduces a parser ambiguity because of the ternary operator and short array syntax (`$foo?["foo"]:["bar"]`). Because of this complication this operator is not part of this RFC.
+Since PHP 7.4 a notice is emitted on array access on `null` (`null["foo"]`). Thus the operator `?[]` could also be useful (`$foo?["foo"]`). Unfortunately, this code introduces a parser ambiguity because of the ternary operator and short array syntax (`$foo?["foo"]:["bar"]`). Because of this complication this operator is not part of this RFC.
 
 ## Vote
 
