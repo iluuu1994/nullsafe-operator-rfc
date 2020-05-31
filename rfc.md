@@ -64,18 +64,30 @@ The following elements will cause new sub-chains.
 Chains are automatically inferred. Only the closest chain will terminate. The following examples will try to illustrate.
 
 ```php
-   $foo?->bar = $a?->b()->c();
-// -------------------------- chain 1
-//              ------------- chain 2
-// If $foo is null chain 1 is aborted, `$a?->b()->c()` is not evaluated, the assignment is skipped
-// If $a is null chain 2 is aborted, null is assigned to `$foo->bar`
-// If `->b()` returns null a "Call to a member function c() on null" error is thrown
+   $foo = $a?->b();
+// --------------- chain 1
+//        -------- chain 2
+// If $a is null chain 2 is aborted, method b() isn't called, null is assigned to $foo
 
-   $a?->b($c?->d);
-// -------------- chain 1
-//        ------  chain 2
-// If $a is null chain 1 is aborted, `->b()` is not called, `$c?->d` is not evaluated
-// If $c is null chain 2 is aborted, null is passed to `->b()`
+   $a?->b($c->d());
+// --------------- chain 1
+//        -------  chain 2
+// If $a is null chain 1 is aborted, method b() isn't called, the expression `$c->d()` is not evaluated
+
+   $a->b($c?->d());
+// --------------- chain 1
+//       --------  chain 2
+// If $c is null chain 2 is aborted, method d() isn't called, null is passed to `$a->b()`
+
+   $a[$b->d()];
+// --------------- chain 1
+//       --------  chain 2
+// If $c is null chain 2 is aborted, method d() isn't called, null is passed to `$a->b()`
+
+   $foo?->bar = $a->b();
+// -------------------- chain 1
+//              ------- chain 2
+// If $foo is null chain 1 is aborted, `$a->b()` is not evaluated, the assignment is skipped
 
    $foo++;
 // ------ chain 1
