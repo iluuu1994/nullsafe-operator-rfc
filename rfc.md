@@ -25,7 +25,7 @@ if ($session !== null) {
     $user = $session->user;
 
     if ($user !== null) {
-        $address = $user->address;
+        $address = $user->getAddress();
 
         if ($address !== null) {
             $country = $address->country;
@@ -40,7 +40,7 @@ With the nullsafe operator `?->` this code could instead be written as:
 
 
 ```php
-$country = $session?->user?->address?->country;
+$country = $session?->user?->getAddress()?->country;
 
 // do something with $country
 ```
