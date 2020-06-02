@@ -15,16 +15,20 @@ This RFC proposes a new operator nullsafe operator `?->` with full short-circuit
 
 It is fairly common to only want to call a method or fetch a property on the result of an expression if it is not `null`. 
 
-Currently in PHP, checking for null needs to be done "long hand" like this:
+Currently in PHP, checking for `null` needs to be done "long hand" like this:
 
 ```php
 
 $country =  null;
 
-if($session !== null) {
-    if($session->user !== null) {
-        if ($session->user->address !== null) {
-            $country = $session->user->address->country;
+if ($session !== null) {
+    $user = $session->user;
+
+    if ($user !== null) {
+        $address = $user->address;
+
+        if ($address !== null) {
+            $country = $address->country;
         }
     }
 }
