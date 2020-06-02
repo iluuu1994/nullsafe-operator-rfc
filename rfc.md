@@ -13,30 +13,33 @@ This RFC proposes a new operator nullsafe operator `?->` with full short-circuit
 
 ## Proposal
 
-It is fairly common to only want to call a method or fetch a property on the result of an expression if it is not `null`. This is usually done with if statements / ternary expressions and temporary variables.
+It is fairly common to only want to call a method or fetch a property on the result of an expression if it is not `null`. 
+
+Currently in PHP, checking for null needs to be done "long hand" like this:
 
 ```php
-$bar = $foo !== null ? $foo->bar() : null;
-$baz = $bar !== null ? $bar->baz : null;
 
-// or
+$country =  null;
 
-if ($foo === null) {
-    return;
+if($session !== null) {
+    if($session->user !== null) {
+        if ($session->user->address !== null) {
+            $country = $session->user->address->country;
+        }
+    }
 }
-$bar = $foo->bar();
 
-if ($bar === null) {
-    return;
-}
-$baz = $bar->baz;
+// do something with $country
+
 ```
 
-With the nullsafe operator `?->` this code could instead be expressed
-like this:
+With the nullsafe operator `?->` this code could instead be written as:
+
 
 ```php
-$baz = $foo?->bar()?->baz;
+$country = $session?->user?->address?->country;
+
+// do something with $country
 ```
 
 When the left hand side of the operator evaluates to `null` the execution of the entire chain will stop and evalute to `null`. When it is not `null` it will behave exactly like the normal `->` operator.
