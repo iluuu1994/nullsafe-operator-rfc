@@ -1,6 +1,6 @@
 # PHP RFC: Nullsafe operator
 
-* Date: 2020-05-25
+* Date: 2020-06-02
 * Author: Ilija Tovilo, tovilo.ilija@gmail.com
 * Status: Under discussion
 * Target Version: PHP 8.0
