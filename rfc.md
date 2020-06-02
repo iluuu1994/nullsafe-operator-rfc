@@ -15,7 +15,7 @@ This RFC proposes a new operator nullsafe operator `?->` with full short-circuit
 
 It is fairly common to only want to call a method or fetch a property on the result of an expression if it is not `null`. 
 
-Currently in PHP, checking for `null` needs to be done "long hand" like this:
+Currently in PHP, checking for `null` leads to deeper nesting and repetition:
 
 ```php
 
@@ -34,7 +34,6 @@ if ($session !== null) {
 }
 
 // do something with $country
-
 ```
 
 With the nullsafe operator `?->` this code could instead be written as:
