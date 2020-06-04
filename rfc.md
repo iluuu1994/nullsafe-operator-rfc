@@ -132,7 +132,7 @@ Lets look the most popular high-level programming languages (according to the [S
 [Swift]: https://docs.swift.org/swift-book/LanguageGuide/OptionalChaining.html
 [Rust]: https://doc.rust-lang.org/stable/rust-by-example/error/option_unwrap/and_then.html#combinators-and_then
 [Dart]: https://dart.dev/guides/language/language-tour#other-operators
-[Hack]: https://docs.hhvm.com/hack/operators/null-safe
+[Hack]: https://docs.hhvm.com/hack/expressions-and-operators/member-selection#null-safe-member-access
 
 ## Backward Incompatible Changes
 
