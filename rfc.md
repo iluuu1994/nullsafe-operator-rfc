@@ -99,6 +99,41 @@ Chains are automatically inferred. Only the closest chain will terminate. The fo
 
 The syntax has been chosen to indicate the precise place in the code that the short-circuiting occurs.
 
+## Other languages
+
+Lets look the most popular high-level programming languages (according to the [Stack Overflow 2020 survey](https://insights.stackoverflow.com/survey/2020#technology-programming-scripting-and-markup-languages)) and our sister language Hack to see how the nullsafe operator is implemented.
+
+| Language     | Has nullsafe operator | Has short-circuiting |
+|--------------|-----------------------|----------------------|
+| [JavaScript] | ✔                     | ✔                    |
+| [Python]     | ✘                     |                      |
+| Java         | ✘                     |                      |
+| [C#]         | ✔                     | ✔                    |
+| [TypeScript] | ✔                     | ✔                    |
+| [Kotlin]     | ✔                     | ✘                    |
+| [Ruby]       | ✔                     | ✘                    |
+| [Swift]      | ✔                     | ✔                    |
+| [Rust]       | ✘                     |                      |
+| Objective-C  | ✔\*                   | ✘                    |
+| [Dart]       | ✔                     | ✘                    |
+| Scala        | ✘†                    |                      |
+| [Hack]       | ✔                     | ✘‡                   |
+
+\* In Object-C accessing properties and calling methods on `nil` are always ignored  
+† Possible via [DSL](https://github.com/ThoughtWorksInc/Dsl.scala/blob/master/keywords-NullSafe/src/main/scala/com/thoughtworks/dsl/keywords/NullSafe.scala)  
+‡ Hack even evaluates method arguments if the callee is `null`
+
+[JavaScript]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining
+[Python]: https://www.python.org/dev/peps/pep-0505/
+[C#]: https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/null-conditional-operators
+[TypeScript]: https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#optional-chaining
+[Kotlin]: https://kotlinlang.org/docs/reference/null-safety.html#safe-calls
+[Ruby]: http://mitrev.net/ruby/2015/11/13/the-operator-in-ruby/
+[Swift]: https://docs.swift.org/swift-book/LanguageGuide/OptionalChaining.html
+[Rust]: https://doc.rust-lang.org/stable/rust-by-example/error/option_unwrap/and_then.html#combinators-and_then
+[Dart]: https://dart.dev/guides/language/language-tour#other-operators
+[Hack]: https://docs.hhvm.com/hack/operators/null-safe
+
 ## Backward Incompatible Changes
 
 There are no known backward incompatible changes in this RFC.
