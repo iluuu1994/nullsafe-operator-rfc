@@ -119,7 +119,7 @@ Lets look the most popular high-level programming languages (according to the [S
 | Scala        | ✗†                    |                      |
 | [Hack]       | ✓                     | ✗‡                   |
 
-\* In Object-C accessing properties and calling methods on `nil` are always ignored  
+\* In Object-C accessing properties and calling methods on `nil` is always ignored  
 † Possible via [DSL](https://github.com/ThoughtWorksInc/Dsl.scala/blob/master/keywords-NullSafe/src/main/scala/com/thoughtworks/dsl/keywords/NullSafe.scala)  
 ‡ Hack even evaluates method arguments if the callee is `null`
 
