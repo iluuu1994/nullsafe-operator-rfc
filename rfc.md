@@ -105,19 +105,19 @@ Lets look the most popular high-level programming languages (according to the [S
 
 | Language     | Has nullsafe operator | Has short-circuiting |
 |--------------|-----------------------|----------------------|
-| [JavaScript] | ✔                     | ✔                    |
-| [Python]     | ✘                     |                      |
-| Java         | ✘                     |                      |
-| [C#]         | ✔                     | ✔                    |
-| [TypeScript] | ✔                     | ✔                    |
-| [Kotlin]     | ✔                     | ✘                    |
-| [Ruby]       | ✔                     | ✘                    |
-| [Swift]      | ✔                     | ✔                    |
-| [Rust]       | ✘                     |                      |
-| Objective-C  | ✔\*                   | ✘                    |
-| [Dart]       | ✔                     | ✘                    |
-| Scala        | ✘†                    |                      |
-| [Hack]       | ✔                     | ✘‡                   |
+| [JavaScript] | ✓                     | ✓                    |
+| [Python]     | ✗                     |                      |
+| Java         | ✗                     |                      |
+| [C#]         | ✓                     | ✓                    |
+| [TypeScript] | ✓                     | ✓                    |
+| [Kotlin]     | ✓                     | ✗                    |
+| [Ruby]       | ✓                     | ✗                    |
+| [Swift]      | ✓                     | ✓                    |
+| [Rust]       | ✗                     |                      |
+| Objective-C  | ✓\*                   | ✗                    |
+| [Dart]       | ✓                     | ✗                    |
+| Scala        | ✗†                    |                      |
+| [Hack]       | ✓                     | ✗‡                   |
 
 \* In Object-C accessing properties and calling methods on `nil` are always ignored  
 † Possible via [DSL](https://github.com/ThoughtWorksInc/Dsl.scala/blob/master/keywords-NullSafe/src/main/scala/com/thoughtworks/dsl/keywords/NullSafe.scala)  
