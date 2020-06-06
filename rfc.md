@@ -121,7 +121,7 @@ Lets look the most popular high-level programming languages (according to the [S
 
 \* In Object-C accessing properties and calling methods on `nil` is always ignored  
 † Possible via [DSL](https://github.com/ThoughtWorksInc/Dsl.scala/blob/master/keywords-NullSafe/src/main/scala/com/thoughtworks/dsl/keywords/NullSafe.scala)  
-‡ Hack even evaluates method arguments if the callee is `null`
+‡ Hack evaluates method arguments even if the callee is `null`
 
 [JavaScript]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining
 [Python]: https://www.python.org/dev/peps/pep-0505/
