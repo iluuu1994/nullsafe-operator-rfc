@@ -9,7 +9,7 @@
 
 ## Introduction
 
-This RFC proposes a new operator nullsafe operator `?->` with full short-circuiting.
+This RFC proposes a new operator nullsafe operator `?->` with full short circuiting.
 
 ## Proposal
 
@@ -97,27 +97,27 @@ Chains are automatically inferred. Only the closest chain will terminate. The fo
 
 ## Syntax choice
 
-The syntax has been chosen to indicate the precise place in the code that the short-circuiting occurs.
+The syntax has been chosen to indicate the precise place in the code that the short circuiting occurs.
 
 ## Other languages
 
 Lets look the most popular high-level programming languages (according to the [Stack Overflow 2020 survey](https://insights.stackoverflow.com/survey/2020#technology-programming-scripting-and-markup-languages)) and our sister language Hack to see how the nullsafe operator is implemented.
 
-| Language     | Has nullsafe operator | Has short-circuiting |
-|--------------|-----------------------|----------------------|
-| [JavaScript] | ✓                     | ✓                    |
-| [Python]     | ✗                     |                      |
-| Java         | ✗                     |                      |
-| [C#]         | ✓                     | ✓                    |
-| [TypeScript] | ✓                     | ✓                    |
-| [Kotlin]     | ✓                     | ✗                    |
-| [Ruby]       | ✓                     | ✗                    |
-| [Swift]      | ✓                     | ✓                    |
-| [Rust]       | ✗                     |                      |
-| Objective-C  | ✓\*                   | ✗                    |
-| [Dart]       | ✓                     | ✗                    |
-| Scala        | ✗†                    |                      |
-| [Hack]       | ✓                     | ✗‡                   |
+| Language     | Has nullsafe operator | Symbol | Has short circuiting |
+|--------------|-----------------------|--------|----------------------|
+| [JavaScript] | ✓                     | ?.     | ✓                    |
+| [Python]     | ✗                     |        |                      |
+| Java         | ✗                     |        |                      |
+| [C#]         | ✓                     | ?.     | ✓                    |
+| [TypeScript] | ✓                     | ?.     | ✓                    |
+| [Kotlin]     | ✓                     | ?.     | ✗                    |
+| [Ruby]       | ✓                     | &.     | ✗                    |
+| [Swift]      | ✓                     | ?.     | ✓                    |
+| [Rust]       | ✗                     |        |                      |
+| Objective-C  | ✗\*                   |        |                      |
+| [Dart]       | ✓                     | ?.     | ✗                    |
+| Scala        | ✗†                    |        |                      |
+| [Hack]       | ✓                     | ?->    | ✗‡                   |
 
 \* In Object-C accessing properties and calling methods on `nil` is always ignored  
 † Possible via [DSL](https://github.com/ThoughtWorksInc/Dsl.scala/blob/master/keywords-NullSafe/src/main/scala/com/thoughtworks/dsl/keywords/NullSafe.scala)  
@@ -133,6 +133,79 @@ Lets look the most popular high-level programming languages (according to the [S
 [Rust]: https://doc.rust-lang.org/stable/rust-by-example/error/option_unwrap/and_then.html#combinators-and_then
 [Dart]: https://dart.dev/guides/language/language-tour#other-operators
 [Hack]: https://docs.hhvm.com/hack/expressions-and-operators/member-selection#null-safe-member-access
+
+8/13 languages have a nullsafe operator. 4/8 of those implement the nullsafe operator with short circuiting.
+
+## Why short circuiting?
+
+As with most things short circuiting has benefits and drawbacks.
+
+### Benefits
+
+1. You can see which methods/properties return null
+
+```php
+// Without short circuiting
+$foo?->bar()?->baz();
+
+// With short circuiting
+$foo?->bar()->baz();
+```
+
+In this example `$foo` might be `null`. Without short circuiting every subsequent method call and property access in the chain will require the nullsafe operator. With short circuiting this isn't necessary which makes it more obvious which methods/properties might return `null`.
+
+2. Allows for nullsafe operator in write context
+
+```php
+$foo?->bar = 'bar';
+var_dump($foo);
+
+// Without short circuiting:
+// Fatal error: Can't use nullsafe result value in write context
+
+// With short circuiting:
+// NULL
+```
+
+This makes `?->` in write context a more strict alternative of `??=`.
+
+```php
+$foo = null;
+$foo->bar ??= 'bar';
+// Warning: Creating default object from empty value
+
+var_dump($foo);
+// object(stdClass)#1 (1) {
+//   ["bar"]=>
+//   string(3) "bar"
+// }
+```
+
+3. Mixing with other operators
+
+```php
+$baz = $foo?->bar()['baz'];
+var_dump($baz);
+
+// Without nullsafe: 
+// Notice: Trying to access array offset on value of type null
+// NULL
+
+// Without nullsafe: 
+// NULL
+```
+
+Since with short circuiting the array access `['baz']` will be completely skipped no notice is emitted. This might be less of a problem once we have a nullsafe array access operator `?[]`. 
+
+### Drawbacks
+
+1. More rules
+
+Short circuiting must define which elements belong to the short circuiting chain and which do not. Not all of them might be immediately obvious but they should be intuitive for the most part.
+
+2. Complexity
+
+It's also very likely that the implementation of the nullsafe operator will be slightly more complicated than the alternative. No short circutiing poses it's own set of complications though (like checking that `?->` can't be used in write context).
 
 ## Backward Incompatible Changes
 
