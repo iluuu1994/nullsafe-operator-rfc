@@ -142,7 +142,7 @@ As with most things short circuiting has benefits and drawbacks.
 
 ### Benefits
 
-1. You can see which methods/properties return null
+**1\. You can see which methods/properties return null**
 
 ```php
 // Without short circuiting
@@ -154,7 +154,7 @@ $foo?->bar()->baz();
 
 In this example `$foo` might be `null`. Without short circuiting every subsequent method call and property access in the chain will require the nullsafe operator. With short circuiting this isn't necessary which makes it more obvious which methods/properties might return `null`.
 
-2. Allows for nullsafe operator in write context
+**2\. Allows for nullsafe operator in write context**
 
 ```php
 $foo?->bar = 'bar';
@@ -181,7 +181,7 @@ var_dump($foo);
 // }
 ```
 
-3. Mixing with other operators
+**3\. Mixing with other operators**
 
 ```php
 $baz = $foo?->bar()['baz'];
@@ -199,11 +199,11 @@ Since with short circuiting the array access `['baz']` will be completely skippe
 
 ### Drawbacks
 
-1. More rules
+**1\. More rules**
 
 Short circuiting must define which elements belong to the short circuiting chain and which do not. Not all of them might be immediately obvious but they should be intuitive for the most part.
 
-2. Complexity
+**2\. Complexity**
 
 It's also very likely that the implementation of the nullsafe operator will be slightly more complicated than the alternative. No short circutiing poses it's own set of complications though (like checking that `?->` can't be used in write context).
 
