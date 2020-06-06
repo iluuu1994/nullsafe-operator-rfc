@@ -167,6 +167,8 @@ var_dump($foo);
 // NULL
 ```
 
+Without short circuiting the assignment to a nullsafe property would be illegal because it produces an r-value (a value that cannot be assigned to). With short circuiting if a nullsafe operation on the left hand side of the assignment fails the assignment is simply skipped.
+
 **3\. Mixing with other operators**
 
 ```php
