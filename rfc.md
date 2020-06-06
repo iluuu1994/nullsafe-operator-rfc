@@ -18,7 +18,6 @@ It is fairly common to only want to call a method or fetch a property on the res
 Currently in PHP, checking for `null` leads to deeper nesting and repetition:
 
 ```php
-
 $country =  null;
 
 if ($session !== null) {
@@ -146,9 +145,11 @@ As with most things short circuiting has benefits and drawbacks.
 
 ```php
 // Without short circuiting
+$foo = null;
 $foo?->bar()?->baz();
 
 // With short circuiting
+$foo = null;
 $foo?->bar()->baz();
 ```
 
@@ -157,6 +158,7 @@ In this example `$foo` might be `null` but `bar()` will never return `null`. Wit
 **2\. Allows for nullsafe operator in write context**
 
 ```php
+$foo = null;
 $foo?->bar = 'bar';
 var_dump($foo);
 
@@ -172,6 +174,7 @@ Without short circuiting the assignment to a nullsafe property would be illegal 
 **3\. Mixing with other operators**
 
 ```php
+$foo = null;
 $baz = $foo?->bar()['baz'];
 var_dump($baz);
 
