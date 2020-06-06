@@ -152,7 +152,7 @@ $foo?->bar()?->baz();
 $foo?->bar()->baz();
 ```
 
-In this example `$foo` might be `null`. Without short circuiting every subsequent method call and property access in the chain will require the nullsafe operator. With short circuiting this isn't necessary which makes it more obvious which methods/properties might return `null`.
+In this example `$foo` might be `null` but `bar()` will never return `null`. Without short circuiting every subsequent method call and property access in the chain will require the nullsafe operator. With short circuiting this isn't necessary which makes it more obvious which methods/properties might return `null`.
 
 **2\. Allows for nullsafe operator in write context**
 
@@ -165,20 +165,6 @@ var_dump($foo);
 
 // With short circuiting:
 // NULL
-```
-
-This makes `?->` in write context a more strict alternative of `??=`.
-
-```php
-$foo = null;
-$foo->bar ??= 'bar';
-// Warning: Creating default object from empty value
-
-var_dump($foo);
-// object(stdClass)#1 (1) {
-//   ["bar"]=>
-//   string(3) "bar"
-// }
 ```
 
 **3\. Mixing with other operators**
