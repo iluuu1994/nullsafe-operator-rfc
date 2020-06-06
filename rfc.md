@@ -193,7 +193,7 @@ Short circuiting must define which elements belong to the short circuiting chain
 
 **2\. Complexity**
 
-It's also very likely that the implementation of the nullsafe operator will be slightly more complicated than the alternative. No short circutiing poses it's own set of complications though (like checking that `?->` can't be used in write context).
+It's also very likely that the implementation of the nullsafe operator with short circuiting will be slightly more complicated than without it. No short circutiing poses it's own set of complications though (like checking that `?->` can't be used in write context).
 
 ## Backward Incompatible Changes
 
