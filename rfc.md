@@ -187,11 +187,11 @@ var_dump($foo);
 $baz = $foo?->bar()['baz'];
 var_dump($baz);
 
-// Without nullsafe: 
+// Without short circuiting: 
 // Notice: Trying to access array offset on value of type null
 // NULL
 
-// Without nullsafe: 
+// With short circuiting 
 // NULL
 ```
 
