@@ -135,68 +135,110 @@ Lets look the most popular high-level programming languages (according to the [S
 
 8/13 languages have a nullsafe operator. 4/8 of those implement the nullsafe operator with short circuiting.
 
-## Why short circuiting?
+## Explanation of short circuiting choice
 
-As with most things short circuiting has benefits and drawbacks.
+A previous RFC for [null safe calls](https://wiki.php.net/rfc/nullsafe_calls) suggested not using short-circuiting. 
 
-### Benefits
+The position of this RFC is that full short-circuiting of the rest of the expression (**Iluja, I a not sure that is the right term**) is the correct choice, for the following reasons.
 
-**1\. You can see which methods/properties return null**
 
-```php
-// Without short circuiting
-$foo = null;
-$foo?->bar()?->baz();
+### Making the code easy to reason about, and avoids surprises.
 
-// With short circuiting
-$foo = null;
-$foo?->bar()->baz();
+Without full short-circuiting, for the following code
+
+```
+function f()
+{
+    echo "Hello, I am a side effect.";
+}
+
+$r = $x?->a(f())
 ```
 
-In this example `$foo` might be `null` but `bar()` will never return `null`. Without short circuiting every subsequent method call and property access in the chain will require the nullsafe operator. With short circuiting this isn't necessary which makes it more obvious which methods/properties might return `null`.
+The function f() would still be called, even when $x is null. 
 
-**2\. Allows for nullsafe operator in write context**
+The position of this RFC is that trying to understand that code is quite hard, and that full short-circuiting of the rest of the expression is the correct choice as otherwise side-effects in function calls for the code after the nullsafe operator will be highly surprising.
 
-```php
-$foo = null;
-$foo?->bar = 'bar';
-var_dump($foo);
 
-// Without short circuiting:
-// Fatal error: Can't use nullsafe result value in write context
+### Fits well when using other operators
 
-// With short circuiting:
-// NULL
-```
-
-Without short circuiting the assignment to a nullsafe property would be illegal because it produces an r-value (a value that cannot be assigned to). With short circuiting if a nullsafe operation on the left hand side of the assignment fails the assignment is simply skipped.
-
-**3\. Mixing with other operators**
+The 'full short-circuit' choice is also the correct choice when dealing with other operators. Consider this code:
 
 ```php
 $foo = null;
 $baz = $foo?->bar()['baz'];
 var_dump($baz);
+```
 
-// Without short circuiting: 
+Without full short circuiting, it could be equivalent to:
+
+```php
+// Without short circuiting:
+if ($foo !== null) {
+   $baz = $foo->bar()[];
+}
+else {
+    $tmp = null;
+    $baz = $tmp['baz'];
+}
+var_dump($baz);
 // Notice: Trying to access array offset on value of type null
-// NULL
-
-// With short circuiting 
 // NULL
 ```
 
-Since with short circuiting the array access `['baz']` will be completely skipped no notice is emitted. This might be less of a problem once we have a nullsafe array access operator `?[]`. 
+And with full short-circuiting, it would be equivalent to:
 
-### Drawbacks
+```php
+// With short circuiting:
+if ($foo !== null) {
+    $baz = $foo->bar()[];
+    
+} else {
+    $baz = null;
+}
+var_dump($baz);
+// NULL
+```
 
-**1\. More rules**
+With short circuiting the array access `['baz']` will be completely skipped no notice is emitted.
 
-Short circuiting must define which elements belong to the short circuiting chain and which do not. Not all of them might be immediately obvious but they should be intuitive for the most part.
 
-**2\. Complexity**
+### Allows for nullsafe operator in write context
 
-It's also very likely that the implementation of the nullsafe operator with short circuiting will be slightly more complicated than without it. No short circutiing poses it's own set of complications though (like checking that `?->` can't be used in write context).
+```php
+$foo?->bar = 'bar';
+var_dump($foo);
+```
+
+
+Without full short circuiting, it could be equivalent to:
+
+```php
+// Without short circuiting:
+
+if ($foo !== null) {
+    $foo->bar = 'bar';
+} else {
+    $tmp = null;
+    $tmp->bar = 'bar';
+}
+
+// PHP Warning:  Creating default object from empty value
+```
+
+
+With full short circuiting, it would be equivalent to:
+
+```php
+
+if ($foo !== null) {
+    $foo->bar = 'bar';
+} 
+// no else statement as nothing to do
+
+```
+
+Without full short circuiting the assignment to a nullsafe property would be illegal because it produces an r-value (a value that cannot be assigned to). With short circuiting if a nullsafe operation on the left hand side of the assignment fails, the assignment is simply skipped.
 
 ## Backward Incompatible Changes
 
@@ -206,7 +248,7 @@ There are no known backward incompatible changes in this RFC.
 
 Since PHP 7.4 a notice is emitted on array access on `null` (`null["foo"]`). Thus the operator `?[]` could also be useful (`$foo?["foo"]`). Unfortunately, this code introduces a parser ambiguity because of the ternary operator and short array syntax (`$foo?["foo"]:["bar"]`). Because of this complication the `?[]` operator is not part of this RFC.
 
-The same also goes for a nullsafe function call syntax (`$callableOrNull?()`).
+Suggestions for a nullsafe function call syntax (`$callableOrNull?()`) are also outside the scope of what is being proposed by this RFC.
 
 ## Vote
 
