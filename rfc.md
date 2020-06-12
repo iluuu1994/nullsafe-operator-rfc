@@ -60,7 +60,7 @@ This complete lack of short circuiting is currently only found in Hack.
 null?->foo(bar())->baz();
 ```
 
-Both the function `bar()` and the method `baz()` are called. `baz()` will cause a "Call to a member function on null" error. Evaluating method arguments makes it the most surprising of the three options. This was also the reason the last RFC moved back to discussion.
+Both the function `bar()` and the method `baz()` are called. `baz()` will cause a "Call to a member function on null" error. Evaluating method arguments makes it the most surprising of the three options. This was the primary criticism of [the last RFC](https://wiki.php.net/rfc/nullsafe_calls).
 
 2\. Short circuiting for method arguments but not chained method calls
 
