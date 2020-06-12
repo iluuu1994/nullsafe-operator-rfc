@@ -52,7 +52,7 @@ When the left hand side of the operator evaluates to `null` the execution of the
 
 Short circuiting refers to skipping the evaluation of an expression based on some given condition. Two common examples are the operators `&&` and `||`. There are three ways the nullsafe operator `?->` could implement short circuiting.
 
-1\. Short circuiting for neither method arguments nor chained method calls
+**1\. Short circuiting for neither method arguments nor chained method calls**
 
 This complete lack of short circuiting is currently only found in Hack.
 
@@ -62,7 +62,7 @@ null?->foo(bar())->baz();
 
 Both the function `bar()` and the method `baz()` are called. `baz()` will cause a "Call to a member function on null" error. Evaluating method arguments makes it the most surprising of the three options. This was the primary criticism of [the last RFC](https://wiki.php.net/rfc/nullsafe_calls).
 
-2\. Short circuiting for method arguments but not chained method calls
+**2\. Short circuiting for method arguments but not chained method calls**
 
 This is what would normally be considered lack of short circuiting.
 
@@ -72,7 +72,7 @@ null?->foo(bar())->baz();
 
 The function `bar()` is not called, the method `baz()` is. `baz()` will cause a "Call to a member function on null" error.
 
-3\. Short circuiting for both method arguments and chained method calls
+**3\. Short circuiting for both method arguments and chained method calls**
 
 We'll refer to this as full short circuiting.
 
