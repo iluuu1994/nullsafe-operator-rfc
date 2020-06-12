@@ -132,23 +132,25 @@ Chains are automatically inferred. Only the closest chain will terminate. The fo
 
 ### Rationale
 
-#### Benefits
-
-**1\. You can see which methods/properties return null**
+**1\. It avoids surprises**
 
 ```php
-// Without short circuiting
 $foo = null;
-$foo?->bar()?->baz();
+$foo?->bar(expensive_function());
+```
 
-// With short circuiting
+The evaluation of `expensive_function()` is undesirable if `$foo` is `null` as its result will simply be discarded. If the function has side effects it could also lead to surpsises.
+
+**2\. You can see which methods/properties return null**
+
+```php
 $foo = null;
 $foo?->bar()->baz();
 ```
 
-In this example `$foo` might be `null` but `bar()` will never return `null`. Without short circuiting every subsequent method call and property access in the chain will require the nullsafe operator. With short circuiting this isn't necessary which makes it more obvious which methods/properties might return `null`.
+Without short circuiting every subsequent method call and property access in the chain will require using the nullsafe operator or you will get a "Call to a member function on null" error. With short circuiting this isn't necessary which makes it more obvious which methods/properties might return `null`.
 
-**2\. Allows for nullsafe operator in write context**
+**3\. Allows for nullsafe operator in write context**
 
 ```php
 $foo = null;
@@ -164,7 +166,7 @@ var_dump($foo);
 
 Without short circuiting the assignment to a nullsafe property would be illegal because it produces an r-value (a value that cannot be assigned to). With short circuiting if a nullsafe operation on the left hand side of the assignment fails the assignment is simply skipped.
 
-**3\. Mixing with other operators**
+**4\. Mixing with other operators**
 
 ```php
 $foo = null;
@@ -179,17 +181,7 @@ var_dump($baz);
 // NULL
 ```
 
-Since with short circuiting the array access `['baz']` will be completely skipped no notice is emitted. This might be less of a problem once we have a nullsafe array access operator `?[]`. 
-
-#### Drawbacks
-
-**1\. More rules**
-
-Short circuiting must define which elements belong to the short circuiting chain and which do not. Not all of them might be immediately obvious but they should be intuitive for the most part.
-
-**2\. Complexity**
-
-It's also very likely that the implementation of the nullsafe operator with short circuiting will be slightly more complicated than without it. No short circutiing poses it's own set of complications though (like checking that `?->` can't be used in write context).
+Since with short circuiting the array access `['baz']` will be completely skipped no notice is emitted.
 
 ## Other languages
 
