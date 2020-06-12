@@ -54,7 +54,7 @@ Short circuiting refers to skipping the evaluation of an expression based on som
 
 1\. Short circuiting for neither method arguments nor chained method calls
 
-This complete lack of short circuiting is currently only found in Hack. Both the method arguments and chained method calls are evaluated if the left hand side is `null`.
+This complete lack of short circuiting is currently only found in Hack.
 
 ```php
 null?->foo(bar())->baz();
@@ -64,7 +64,7 @@ Both the function `bar()` and the method `baz()` are called. `baz()` will cause 
 
 2\. Short circuiting for method arguments but not chained method calls
 
-This is what would normally be considered lack of short circuiting. Method arguments are not evaluated if the left hand side of the operator is `null` but chained method calls are.
+This is what would normally be considered lack of short circuiting.
 
 ```php
 null?->foo(bar())->baz();
@@ -74,7 +74,7 @@ The function `bar()` is not called, the method `baz()` is. `baz()` will cause a 
 
 3\. Short circuiting for both method arguments and chained method calls
 
-We'll refer to this as full short circuiting. Neither method arguments nor chained method calls are evaluated if the left hand side of the operator is `null`.
+We'll refer to this as full short circuiting.
 
 ```php
 null?->foo(bar())->baz();
