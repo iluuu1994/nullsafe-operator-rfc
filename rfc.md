@@ -46,9 +46,45 @@ $country = $session?->user?->getAddress()?->country;
 
 When the left hand side of the operator evaluates to `null` the execution of the entire chain will stop and evalute to `null`. When it is not `null` it will behave exactly like the normal `->` operator.
 
-### Short circuiting
+## Short circuiting
 
-This RFC proposes full short circuiting. This means when the evaluation of one element in the chain fails the execution of the entire chain is aborted and the entire chain evaluates to `null`. The following elements are considered part of the chain.
+### Introduction
+
+Short circuiting refers to skipping the evaluation of an expression based on some given condition. Two common examples are the operators `&&` and `||`. There are three ways the nullsafe operator `?->` could implement short circuiting.
+
+1\. Short circuiting for neither method arguments nor chained method calls
+
+This complete lack of short circuiting is currently only found in Hack.
+
+```php
+null?->foo(bar())->baz();
+```
+
+Both the function `bar()` and the method `baz()` are called. `baz()` will cause a "Call to a member function on null" error. Evaluating method arguments makes it the most surprising of the three options. This was the primary criticism of [the last RFC](https://wiki.php.net/rfc/nullsafe_calls).
+
+2\. Short circuiting for method arguments but not chained method calls
+
+This is what would normally be considered lack of short circuiting.
+
+```php
+null?->foo(bar())->baz();
+```
+
+The function `bar()` is not called, the method `baz()` is. `baz()` will cause a "Call to a member function on null" error.
+
+3\. Short circuiting for both method arguments and chained method calls
+
+We'll refer to this as full short circuiting.
+
+```php
+null?->foo(bar())->baz();
+```
+
+Neither the function `bar()` nor the method `baz()` are called. There will be no "Call to a member function on null" error.
+
+### Proposal
+
+This RFC proposes full short circuiting. When the evaluation of one element in the chain fails the execution of the entire chain is aborted and the entire chain evaluates to `null`. The following elements are considered part of the chain.
 
 * Array access (`[]`)
 * Property access (`->`)
@@ -94,52 +130,9 @@ Chains are automatically inferred. Only the closest chain will terminate. The fo
 // If $foo is null, chain 1 is aborted, ++ is skipped
 ```
 
-## Syntax choice
+### Rationale
 
-The syntax has been chosen to indicate the precise place in the code that the short circuiting occurs.
-
-## Other languages
-
-Lets look the most popular high-level programming languages (according to the [Stack Overflow 2020 survey](https://insights.stackoverflow.com/survey/2020#technology-programming-scripting-and-markup-languages)) and our sister language Hack to see how the nullsafe operator is implemented.
-
-| Language     | Has nullsafe operator | Symbol | Has short circuiting |
-|--------------|-----------------------|--------|----------------------|
-| [JavaScript] | ✓                     | ?.     | ✓                    |
-| [Python]     | ✗                     |        |                      |
-| Java         | ✗                     |        |                      |
-| [C#]         | ✓                     | ?.     | ✓                    |
-| [TypeScript] | ✓                     | ?.     | ✓                    |
-| [Kotlin]     | ✓                     | ?.     | ✗                    |
-| [Ruby]       | ✓                     | &.     | ✗                    |
-| [Swift]      | ✓                     | ?.     | ✓                    |
-| [Rust]       | ✗                     |        |                      |
-| Objective-C  | ✗\*                   |        |                      |
-| [Dart]       | ✓                     | ?.     | ✗                    |
-| Scala        | ✗†                    |        |                      |
-| [Hack]       | ✓                     | ?->    | ✗‡                   |
-
-\* In Object-C accessing properties and calling methods on `nil` is always ignored  
-† Possible via [DSL](https://github.com/ThoughtWorksInc/Dsl.scala/blob/master/keywords-NullSafe/src/main/scala/com/thoughtworks/dsl/keywords/NullSafe.scala)  
-‡ Hack evaluates method arguments even if the left hand side of `?->` is `null`
-
-[JavaScript]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining
-[Python]: https://www.python.org/dev/peps/pep-0505/
-[C#]: https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/null-conditional-operators
-[TypeScript]: https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#optional-chaining
-[Kotlin]: https://kotlinlang.org/docs/reference/null-safety.html#safe-calls
-[Ruby]: http://mitrev.net/ruby/2015/11/13/the-operator-in-ruby/
-[Swift]: https://docs.swift.org/swift-book/LanguageGuide/OptionalChaining.html
-[Rust]: https://doc.rust-lang.org/stable/rust-by-example/error/option_unwrap/and_then.html#combinators-and_then
-[Dart]: https://dart.dev/guides/language/language-tour#other-operators
-[Hack]: https://docs.hhvm.com/hack/expressions-and-operators/member-selection#null-safe-member-access
-
-8/13 languages have a nullsafe operator. 4/8 of those implement the nullsafe operator with short circuiting.
-
-## Why short circuiting?
-
-As with most things short circuiting has benefits and drawbacks.
-
-### Benefits
+#### Benefits
 
 **1\. You can see which methods/properties return null**
 
@@ -188,7 +181,7 @@ var_dump($baz);
 
 Since with short circuiting the array access `['baz']` will be completely skipped no notice is emitted. This might be less of a problem once we have a nullsafe array access operator `?[]`. 
 
-### Drawbacks
+#### Drawbacks
 
 **1\. More rules**
 
@@ -197,6 +190,47 @@ Short circuiting must define which elements belong to the short circuiting chain
 **2\. Complexity**
 
 It's also very likely that the implementation of the nullsafe operator with short circuiting will be slightly more complicated than without it. No short circutiing poses it's own set of complications though (like checking that `?->` can't be used in write context).
+
+## Other languages
+
+Lets look the most popular high-level programming languages (according to the [Stack Overflow 2020 survey](https://insights.stackoverflow.com/survey/2020#technology-programming-scripting-and-markup-languages)) and our sister language Hack to see how the nullsafe operator is implemented.
+
+| Language     | Has nullsafe operator | Symbol | Has short circuiting |
+|--------------|-----------------------|--------|----------------------|
+| [JavaScript] | ✓                     | ?.     | ✓                    |
+| [Python]     | ✗                     |        |                      |
+| Java         | ✗                     |        |                      |
+| [C#]         | ✓                     | ?.     | ✓                    |
+| [TypeScript] | ✓                     | ?.     | ✓                    |
+| [Kotlin]     | ✓                     | ?.     | ✗                    |
+| [Ruby]       | ✓                     | &.     | ✗                    |
+| [Swift]      | ✓                     | ?.     | ✓                    |
+| [Rust]       | ✗                     |        |                      |
+| Objective-C  | ✗\*                   |        |                      |
+| [Dart]       | ✓                     | ?.     | ✗                    |
+| Scala        | ✗†                    |        |                      |
+| [Hack]       | ✓                     | ?->    | ✗‡                   |
+
+\* In Object-C accessing properties and calling methods on `nil` is always ignored  
+† Possible via [DSL](https://github.com/ThoughtWorksInc/Dsl.scala/blob/master/keywords-NullSafe/src/main/scala/com/thoughtworks/dsl/keywords/NullSafe.scala)  
+‡ Hack evaluates method arguments even if the left hand side of `?->` is `null`
+
+[JavaScript]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining
+[Python]: https://www.python.org/dev/peps/pep-0505/
+[C#]: https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/null-conditional-operators
+[TypeScript]: https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#optional-chaining
+[Kotlin]: https://kotlinlang.org/docs/reference/null-safety.html#safe-calls
+[Ruby]: http://mitrev.net/ruby/2015/11/13/the-operator-in-ruby/
+[Swift]: https://docs.swift.org/swift-book/LanguageGuide/OptionalChaining.html
+[Rust]: https://doc.rust-lang.org/stable/rust-by-example/error/option_unwrap/and_then.html#combinators-and_then
+[Dart]: https://dart.dev/guides/language/language-tour#other-operators
+[Hack]: https://docs.hhvm.com/hack/expressions-and-operators/member-selection#null-safe-member-access
+
+8/13 languages have a nullsafe operator. 4/8 of those implement the nullsafe operator with short circuiting.
+
+## Syntax choice
+
+The `?` in `?->` denotes the precise place in the code where the short circuiting occurs. It closesly resembles the syntax of every other language that implements a nullsafe operator. 
 
 ## Backward Incompatible Changes
 
