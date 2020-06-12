@@ -232,7 +232,7 @@ There are no known backward incompatible changes in this RFC.
 
 Since PHP 7.4 a notice is emitted on array access on `null` (`null["foo"]`). Thus the operator `?[]` could also be useful (`$foo?["foo"]`). Unfortunately, this code introduces a parser ambiguity because of the ternary operator and short array syntax (`$foo?["foo"]:["bar"]`). Because of this complication the `?[]` operator is not part of this RFC.
 
-The same also goes for a nullsafe function call syntax (`$callableOrNull?()`).
+A nullsafe function call syntax (`$callableOrNull?()`) is also outside of scope for this RFC.
 
 ## Vote
 
