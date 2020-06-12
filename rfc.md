@@ -230,7 +230,7 @@ Lets look the most popular high-level programming languages (according to the [S
 
 ## Syntax choice
 
-The `?` in `?->` denotes the precise place in the code that the short circuiting occurs. It closesly resembles the syntax of every other language that implements a nullsafe operator. 
+The `?` in `?->` denotes the precise place in the code where the short circuiting occurs. It closesly resembles the syntax of every other language that implements a nullsafe operator. 
 
 ## Backward Incompatible Changes
 
