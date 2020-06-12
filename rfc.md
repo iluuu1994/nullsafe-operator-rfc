@@ -50,37 +50,23 @@ When the left hand side of the operator evaluates to `null` the execution of the
 
 ### Introduction
 
-Short circuiting refers to skipping the evaluation of an expression based on some given condition. Two common examples are the operators `&&` and `||`. There are three ways the nullsafe operator `?->` could implement short circuiting.
+Short circuiting refers to skipping the evaluation of an expression based on some given condition. Two common examples are the operators `&&` and `||`. There are three ways the nullsafe operator `?->` could implement short circuiting. We'll look at the same code snippet for every option.
+
+```php
+null?->foo(bar())->baz();
+```
 
 **1\. Short circuiting for neither method arguments nor chained method calls**
 
-This complete lack of short circuiting is currently only found in Hack.
-
-```php
-null?->foo(bar())->baz();
-```
-
-Both the function `bar()` and the method `baz()` are called. `baz()` will cause a "Call to a member function on null" error. Evaluating method arguments makes it the most surprising of the three options. This was the primary criticism of [the last RFC](https://wiki.php.net/rfc/nullsafe_calls).
+This complete lack of short circuiting is currently only found in Hack. Both the function `bar()` and the method `baz()` are called. `baz()` will cause a "Call to a member function on null" error. Evaluating method arguments makes it the most surprising of the three options. This was the primary criticism of [the last RFC](https://wiki.php.net/rfc/nullsafe_calls).
 
 **2\. Short circuiting for method arguments but not chained method calls**
 
-This is what would normally be considered lack of short circuiting.
-
-```php
-null?->foo(bar())->baz();
-```
-
-The function `bar()` is not called, the method `baz()` is. `baz()` will cause a "Call to a member function on null" error.
+This is what would normally be considered lack of short circuiting. The function `bar()` is not called, the method `baz()` is. `baz()` will cause a "Call to a member function on null" error.
 
 **3\. Short circuiting for both method arguments and chained method calls**
 
-We'll refer to this as full short circuiting.
-
-```php
-null?->foo(bar())->baz();
-```
-
-Neither the function `bar()` nor the method `baz()` are called. There will be no "Call to a member function on null" error.
+We'll refer to this as full short circuiting. Neither the function `bar()` nor the method `baz()` are called. There will be no "Call to a member function on null" error.
 
 ### Proposal
 
