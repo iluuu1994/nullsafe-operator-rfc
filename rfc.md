@@ -209,7 +209,47 @@ Lets look the most popular high-level programming languages (according to the [S
 
 ## Syntax choice
 
-The `?` in `?->` denotes the precise place in the code where the short circuiting occurs. It closesly resembles the syntax of every other language that implements a nullsafe operator. 
+The `?` in `?->` denotes the precise place in the code where the short circuiting occurs. It closesly resembles the syntax of every other language that implements a nullsafe operator.
+
+## Edge cases
+
+### Nullsafe operator in parameters passed by reference
+
+The nullsafe operator is not allowed in parameters passed by reference, even if the resulting value is not `null`.
+
+```php
+takes_ref($foo?->bar);
+// Error: Cannot pass parameter 1 by reference
+```
+
+The code above could loosely be translated to the following code.
+
+```php
+if ($foo !== null) {
+    takes_ref($foo->bar);
+} else {
+    takes_ref(null);
+}
+```
+
+This code is not valid, as it would throw a "Fatal error: Only variables can be passed by reference" error whenever `$foo` was `null`.
+
+### Nullsafe operator in values returned by reference
+
+Trying to use the nullsafe operator in values returned by reference will emit a notice and return the result **by value**.
+
+```php
+function &return_by_ref($foo) {
+    return $foo?->bar;
+}
+
+$barRef = &return_by_ref($foo);
+// Notice: Only variable references should be returned by reference
+$barRef = 'bar';
+var_dump($foo->bar); // bar was NOT set
+```
+
+This is consistent with trying to pass other r-values by reference.
 
 ## Backward Incompatible Changes
 
