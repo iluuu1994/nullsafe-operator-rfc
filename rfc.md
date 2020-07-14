@@ -232,7 +232,7 @@ For this reason, the following examples are disallowed.
 
 ```php
 // 1
-$x = &$foo->bar;
+$x = &$foo?->bar;
 // Compiler error: Cannot take reference of a nullsafe chain
 
 // 2
