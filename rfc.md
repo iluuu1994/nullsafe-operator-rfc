@@ -213,7 +213,7 @@ The `?` in `?->` denotes the precise place in the code where the short circuitin
 
 ## References
 
-Using the nullsafe operator with references is not allowed. This is because references require l-values (memory location, like variables or properties) but the nullsafe operator can sometimes return the r-value `null`.
+Taking the reference of a nullsafe chain is not allowed. This is because references require l-values (memory location, like variables or properties) but the nullsafe operator can sometimes return the r-value `null`.
 
 ```php
 $x = &$foo->bar;
@@ -228,12 +228,12 @@ if ($foo !== null) {
 }
 ```
 
-For this reason, using the nullsafe operator with references is disallowed.
+For this reason, the following examples are disallowed.
 
 ```php
 // 1
 $x = &$foo->bar;
-// Compiler error: Cannot use nullsafe operator in expressions that return a reference
+// Compiler error: Cannot take reference of a nullsafe chain
 
 // 2
 takes_ref($foo?->bar);
@@ -242,7 +242,7 @@ takes_ref($foo?->bar);
 // 3
 function &return_by_ref($foo) {
     return $foo?->bar;
-    // Compiler error: Cannot use nullsafe operator in expressions that return a reference
+    // Compiler error: Cannot take reference of a nullsafe chain
 }
 ```
 
