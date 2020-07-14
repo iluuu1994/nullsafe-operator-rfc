@@ -216,7 +216,7 @@ The `?` in `?->` denotes the precise place in the code where the short circuitin
 Taking the reference of a nullsafe chain is not allowed. This is because references require l-values (memory locations, like variables or properties) but the nullsafe operator can sometimes return the r-value `null`.
 
 ```php
-$x = &$foo->bar;
+$x = &$foo?->bar;
 
 // Could loosely be translated to
 
