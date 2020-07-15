@@ -9,11 +9,11 @@
 
 ## Introduction
 
-This RFC proposes a new operator nullsafe operator `?->` with full short circuiting.
+This RFC proposes the new nullsafe operator `?->` with full short circuiting.
 
 ## Proposal
 
-It is fairly common to only want to call a method or fetch a property on the result of an expression if it is not `null`. 
+It is fairly common to only want to call a method or fetch a property on the result of an expression if it is not `null`.
 
 Currently in PHP, checking for `null` leads to deeper nesting and repetition:
 
@@ -79,8 +79,6 @@ This RFC proposes full short circuiting. When the evaluation of one element in t
 * Method call (`->`)
 * Nullsafe method call (`?->`)
 * Static method call (`::`)
-* Assignment (`=`, `+=`, `??=`, `= &`, etc.)
-* Post/pre increment (`++`, `--`)
 
 The following elements will cause new sub-chains.
 
@@ -106,15 +104,6 @@ Chains are automatically inferred. Only the closest chain will terminate. The fo
 // --------------- chain 1
 //       --------  chain 2
 // If $c is null chain 2 is aborted, method d() isn't called, null is passed to `$a->b()`
-
-   $foo?->bar = $a->b();
-// -------------------- chain 1
-//              ------- chain 2
-// If $foo is null chain 1 is aborted, `$a->b()` is not evaluated, the assignment is skipped
-
-   $foo?->bar++;
-// ------------ chain 1
-// If $foo is null, chain 1 is aborted, ++ is skipped
 ```
 
 ### Rationale
@@ -137,34 +126,18 @@ $foo?->bar()->baz();
 
 Without short circuiting every subsequent method call and property access in the chain will require using the nullsafe operator or you will get a "Call to a member function on null" error. With short circuiting this isn't necessary which makes it more obvious which methods/properties might return `null`.
 
-**3\. Allows for nullsafe operator in write context**
-
-```php
-$foo = null;
-$foo?->bar = 'bar';
-var_dump($foo);
-
-// Without short circuiting:
-// Fatal error: Can't use nullsafe result value in write context
-
-// With short circuiting:
-// NULL
-```
-
-Without short circuiting the assignment to a nullsafe property would be illegal because it produces an r-value (a value that cannot be assigned to). With short circuiting if a nullsafe operation on the left hand side of the assignment fails the assignment is simply skipped.
-
-**4\. Mixing with other operators**
+**3\. Mixing with other operators**
 
 ```php
 $foo = null;
 $baz = $foo?->bar()['baz'];
 var_dump($baz);
 
-// Without short circuiting: 
+// Without short circuiting:
 // Notice: Trying to access array offset on value of type null
 // NULL
 
-// With short circuiting 
+// With short circuiting
 // NULL
 ```
 
@@ -190,8 +163,8 @@ Lets look the most popular high-level programming languages (according to the [S
 | Scala        | ✗†                    |        |                      |
 | [Hack]       | ✓                     | ?->    | ✗‡                   |
 
-\* In Object-C accessing properties and calling methods on `nil` is always ignored  
-† Possible via [DSL](https://github.com/ThoughtWorksInc/Dsl.scala/blob/master/keywords-NullSafe/src/main/scala/com/thoughtworks/dsl/keywords/NullSafe.scala)  
+\* In Object-C accessing properties and calling methods on `nil` is always ignored
+† Possible via [DSL](https://github.com/ThoughtWorksInc/Dsl.scala/blob/master/keywords-NullSafe/src/main/scala/com/thoughtworks/dsl/keywords/NullSafe.scala)
 ‡ Hack evaluates method arguments even if the left hand side of `?->` is `null`
 
 [JavaScript]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining
@@ -210,6 +183,15 @@ Lets look the most popular high-level programming languages (according to the [S
 ## Syntax choice
 
 The `?` in `?->` denotes the precise place in the code where the short circuiting occurs. It closesly resembles the syntax of every other language that implements a nullsafe operator.
+
+## Nullsafe operator in write context
+
+Using the nullsafe operator in write context ist not allowed. It was previously suggested to skip the assignment if the left hand side of the nullsafe operator is `null`. However, due to technical difficulties this is not a part of this RFC. It might be addressed in a later RFC.
+
+```php
+$foo?->bar = 'bar';
+// Can't use nullsafe operator in write context
+```
 
 ## References
 
