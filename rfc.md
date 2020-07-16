@@ -204,7 +204,7 @@ unset($foo?->bar->baz);
 // Assignments can only happen to writable values
 ```
 
-It was previously suggested to allow the nullsafe operator in the left hand side of assignments and skip the assignment if the left hand side of the nullsafe operator was `null`. However, due to technical difficulties this is not a part of this RFC. It might be addressed in a later RFC.
+It was previously suggested to allow the nullsafe operator in the left hand side of assignments and skip the assignment if the left hand side of the nullsafe operator was `null`. However, due to technical difficulties this is not a part of this RFC. It might be addressed in a later RFC. It is also not completely clear whether the right hand side of the assignment should always be evaluated or not.
 
 ### References
 
