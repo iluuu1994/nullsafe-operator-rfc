@@ -197,15 +197,14 @@ $foo?->bar->baz = 'baz';
 foreach ([1, 2, 3] as $foo?->bar->baz) {}
 // Can't use nullsafe operator in write context
 
+unset($foo?->bar->baz);
+// Can't use nullsafe operator in write context
+
 [$foo?->bar->baz] = 'baz';
 // Assignments can only happen to writable values
 ```
 
 It was previously suggested to allow the nullsafe operator in the left hand side of assignments and skip the assignment if the left hand side of the nullsafe operator was `null`. However, due to technical difficulties this is not a part of this RFC. It might be addressed in a later RFC.
-
-### Unset
-
-Using the nullsafe operator
 
 ### References
 
