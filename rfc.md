@@ -184,16 +184,30 @@ Lets look the most popular high-level programming languages (according to the [S
 
 The `?` in `?->` denotes the precise place in the code where the short circuiting occurs. It closesly resembles the syntax of every other language that implements a nullsafe operator.
 
-## Nullsafe operator in write context
+## Forbidden usages
 
-Using the nullsafe operator in write context ist not allowed. It was previously suggested to skip the assignment if the left hand side of the nullsafe operator is `null`. However, due to technical difficulties this is not a part of this RFC. It might be addressed in a later RFC.
+### Nullsafe operator in write context
+
+Using the nullsafe operator in write context ist not allowed.
 
 ```php
-$foo?->bar = 'bar';
+$foo?->bar->baz = 'baz';
 // Can't use nullsafe operator in write context
+
+foreach ([1, 2, 3] as $foo?->bar->baz) {}
+// Can't use nullsafe operator in write context
+
+[$foo?->bar->baz] = 'baz';
+// Assignments can only happen to writable values
 ```
 
-## References
+It was previously suggested to allow the nullsafe operator in the left hand side of assignments and skip the assignment if the left hand side of the nullsafe operator was `null`. However, due to technical difficulties this is not a part of this RFC. It might be addressed in a later RFC.
+
+### Unset
+
+Using the nullsafe operator
+
+### References
 
 Taking the reference of a nullsafe chain is not allowed. This is because references require l-values (memory locations, like variables or properties) but the nullsafe operator can sometimes return the r-value `null`.
 
